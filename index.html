@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Christmas Card</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #003366, #1a1a1a);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            height: 100%;
+        }
+
+        .card h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px #000000;
+            margin: 0.5em 0;
+        }
+
+        .card p {
+            font-size: 1.5em;
+            margin: 0.5em 0;
+        }
+
+        .tree {
+            margin-top: 20px;
+            width: 100px;
+            height: 150px;
+            background: #2E8B57;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            position: relative;
+        }
+
+        .tree::after {
+            content: '';
+            width: 20px;
+            height: 30px;
+            background: #8B4513;
+            position: absolute;
+            bottom: -30px;
+            left: 40px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="snowCanvas"></canvas>
+
+    <div class="card">
+        <h1>Priecīgus Ziemssvetkus!</h1>
+        <p>Novelam Jums prieku un mieru šajos svētkos.</p>
+        <div class="tree"></div>
+    </div>
+
+    <script>
+        // Snowfall effect using JavaScript
+        const canvas = document.getElementById('snowCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Array to hold snowflakes
+        const snowflakes = [];
+
+        // Snowflake class
+        class Snowflake {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = Math.random() * 4 + 1;
+                this.speed = Math.random() * 2 + 1;
+                this.wind = Math.random() * 1 - 0.5;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.x += this.wind;
+
+                // Reset snowflake to top when it falls off the bottom
+                if (this.y > canvas.height) {
+                    this.y = -this.radius;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+// Create snowflakes
+        function createSnowflakes(count) {
+            for (let i = 0; i < count; i++) {
+                snowflakes.push(new Snowflake());
+            }
+        }
+
+        // Animate snowflakes
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            snowflakes.forEach((snowflake) => {
+                snowflake.update();
+                snowflake.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize
+        createSnowflakes(150); // Number of snowflakes
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+
+</html>
